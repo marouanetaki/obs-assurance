@@ -1,5 +1,9 @@
 @extends('layouts.admin')
 @section('content')
+<p>
+    Avant d'ajouter une prise en charge, vous devez telecharger et remplir le documents suivant auprés 
+    de votre clinique <a href="http://obs-assurance.test/prise_en_charge.pdf"><b>Dossier PC</b></a>
+</p>
 @can('prise_create')
     <div style="margin-bottom: 10px;" class="row">
         <div class="col-lg-12">
