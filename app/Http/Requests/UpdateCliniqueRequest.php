@@ -22,7 +22,6 @@ class UpdateCliniqueRequest extends FormRequest
                 'required',
             ],
             'email' => [
-                'required',
             ],
             'telephone' => [
                 'string',

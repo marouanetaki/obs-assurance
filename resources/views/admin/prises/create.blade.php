@@ -38,11 +38,11 @@
                 <span class="help-block">{{ trans('cruds.prise.fields.clinique_helper') }}</span>
             </div>
             <div class="form-group">
-                <label>{{ trans('cruds.prise.fields.statut') }}</label>
+                {{-- <label>{{ trans('cruds.prise.fields.statut') }}</label> --}}
                 @foreach(App\Models\Prise::STATUT_RADIO as $key => $label)
                     <div class="form-check {{ $errors->has('statut') ? 'is-invalid' : '' }}">
-                        <input class="form-check-input" type="radio" id="statut_{{ $key }}" name="statut" value="{{ $key }}" {{ old('statut', 'En cours') === (string) $key ? 'checked' : '' }}>
-                        <label class="form-check-label" for="statut_{{ $key }}">{{ $label }}</label>
+                        <input hidden class="form-check-input" type="radio" id="statut_{{ $key }}" name="statut" value="{{ $key }}" {{ old('statut', 'En cours') === (string) $key ? 'checked' : '' }}>
+                        {{-- <label class="form-check-label" for="statut_{{ $key }}">{{ $label }}</label> --}}
                     </div>
                 @endforeach
                 @if($errors->has('statut'))

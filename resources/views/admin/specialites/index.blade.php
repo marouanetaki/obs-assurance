@@ -7,7 +7,7 @@
                 {{ trans('global.add') }} {{ trans('cruds.specialite.title_singular') }}
             </a>
             @can('can_import')
-                <button class="btn btn-warning" data-toggle="modal" data-target="#csvImportModal">
+                <button class="btn btn-secondary" data-toggle="modal" data-target="#csvImportModal">
                     {{ trans('global.app_csvImport') }}
                 </button>
                 @include('csvImport.modal', ['model' => 'Specialite', 'route' => 'admin.specialites.parseCsvImport'])
@@ -59,18 +59,18 @@
                                 @endcan
 
                                 @can('specialite_edit')
-                                    <a class="btn btn-xs btn-success" href="{{ route('admin.specialites.edit', $specialite->id) }}">
+                                    <a class="btn btn-xs btn-info" href="{{ route('admin.specialites.edit', $specialite->id) }}">
                                         <i class="fa fa-pencil"></i>
                                     </a>
                                 @endcan
 
-                                @can('specialite_delete')
+                                {{-- @can('specialite_delete')
                                     <form action="{{ route('admin.specialites.destroy', $specialite->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         <button type="submit" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
                                     </form>
-                                @endcan
+                                @endcan --}}
 
                             </td>
 
@@ -102,19 +102,42 @@
       });
 
       if (ids.length === 0) {
-        alert('{{ trans('global.datatables.zero_selected') }}')
-
+        let timerInterval
+        swal({
+            title: '{{ trans('global.datatables.zero_selected') }}',
+            timer: 3000,
+            icon: 'error',
+            timerProgressBar: true,
+            willClose: () => {
+                clearInterval(timerInterval)
+            }
+        })
         return
       }
 
-      if (confirm('{{ trans('global.areYouSure') }}')) {
-        $.ajax({
-          headers: {'x-csrf-token': _token},
-          method: 'POST',
-          url: config.url,
-          data: { ids: ids, _method: 'DELETE' }})
-          .done(function () { location.reload() })
-      }
+      swal({
+            title: '{{ trans('global.areYouSure') }}',
+            text: "Une fois supprimé, vous ne pourrez pas le récupérer !",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    headers: {'x-csrf-token': _token},
+                    method: 'POST',
+                    url: config.url,
+                    data: { ids: ids, _method: 'DELETE' }
+                })
+                .done(function () { 
+                    location.reload()
+                    swal("Enregistrement supprimé !", {
+                        icon: "success",
+                    })
+                });
+            }
+        });
     }
   }
   dtButtons.push(deleteButton)

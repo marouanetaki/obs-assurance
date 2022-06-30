@@ -77,7 +77,7 @@
                         </th>
                         <td>
                             @foreach($dossier->medicaments as $key => $medicament)
-                                <span class="label label-info">{{ $medicament->nom }}</span>
+                                <span class="bagde badge-info pl-2 pr-2" style="border-radius: 10px;">{{ $medicament->nom }}</span>
                             @endforeach
                         </td>
                     </tr>

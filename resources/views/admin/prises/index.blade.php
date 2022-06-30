@@ -65,7 +65,13 @@
                                 {{ $prise->clinique->nom ?? '' }}
                             </td>
                             <td>
-                                {{ App\Models\Prise::STATUT_RADIO[$prise->statut] ?? '' }}
+                                @if ( App\Models\Prise::STATUT_RADIO[$prise->statut] == 'Réglé' )
+                                    <span class="text-success"><b>{{ App\Models\Prise::STATUT_RADIO[$prise->statut] ?? '' }}</b></span>
+                                @elseif ( App\Models\Prise::STATUT_RADIO[$prise->statut] == 'Rejeté' )
+                                    <span class="text-danger"><b>{{ App\Models\Prise::STATUT_RADIO[$prise->statut] ?? '' }}</b></span>
+                                @else
+                                    <span class="text-warning"><b>{{ App\Models\Prise::STATUT_RADIO[$prise->statut] ?? '' }}</b></span>
+                                @endif
                             </td>
                             <td>
                                 {{ $prise->type_operation ?? '' }}
@@ -81,18 +87,18 @@
                                 @endcan
 
                                 @can('prise_edit')
-                                    <a class="btn btn-xs btn-success" href="{{ route('admin.prises.edit', $prise->id) }}">
+                                    <a class="btn btn-xs btn-info" href="{{ route('admin.prises.edit', $prise->id) }}">
                                         <i class="fa fa-pencil"></i>
                                     </a>
                                 @endcan
 
-                                @can('prise_delete')
+                                {{-- @can('prise_delete')
                                     <form action="{{ route('admin.prises.destroy', $prise->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         <button type="submit" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
                                     </form>
-                                @endcan
+                                @endcan --}}
 
                             </td>
 
@@ -124,19 +130,42 @@
       });
 
       if (ids.length === 0) {
-        alert('{{ trans('global.datatables.zero_selected') }}')
-
+        let timerInterval
+        swal({
+            title: '{{ trans('global.datatables.zero_selected') }}',
+            timer: 3000,
+            icon: 'error',
+            timerProgressBar: true,
+            willClose: () => {
+                clearInterval(timerInterval)
+            }
+        })
         return
       }
 
-      if (confirm('{{ trans('global.areYouSure') }}')) {
-        $.ajax({
-          headers: {'x-csrf-token': _token},
-          method: 'POST',
-          url: config.url,
-          data: { ids: ids, _method: 'DELETE' }})
-          .done(function () { location.reload() })
-      }
+      swal({
+            title: '{{ trans('global.areYouSure') }}',
+            text: "Une fois supprimé, vous ne pourrez pas le récupérer !",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    headers: {'x-csrf-token': _token},
+                    method: 'POST',
+                    url: config.url,
+                    data: { ids: ids, _method: 'DELETE' }
+                })
+                .done(function () { 
+                    location.reload()
+                    swal("Enregistrement supprimé !", {
+                        icon: "success",
+                    })
+                });
+            }
+        });
     }
   }
   dtButtons.push(deleteButton)

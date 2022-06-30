@@ -7,7 +7,7 @@
                 {{ trans('global.add') }} {{ trans('cruds.beneficiaire.title_singular') }}
             </a>
             @can('can_import')
-                <button class="btn btn-warning" data-toggle="modal" data-target="#csvImportModal">
+                <button class="btn btn-secondary" data-toggle="modal" data-target="#csvImportModal">
                     {{ trans('global.app_csvImport') }}
                 </button>
                 @include('csvImport.modal', ['model' => 'Beneficiaire', 'route' => 'admin.beneficiaires.parseCsvImport'])
@@ -70,7 +70,13 @@
                                 {{ App\Models\Beneficiaire::LIEN_PARENTE_SELECT[$beneficiaire->lien_parente] ?? '' }}
                             </td>
                             <td>
-                                {{ App\Models\Beneficiaire::STATUT_SELECT[$beneficiaire->statut] ?? '' }}
+                                @if ( App\Models\Beneficiaire::STATUT_SELECT[$beneficiaire->statut] == 'Actif' )
+                                    <span class="text-success"><b>{{ App\Models\Beneficiaire::STATUT_SELECT[$beneficiaire->statut] ?? '' }}</b></span>
+                                @elseif ( App\Models\Beneficiaire::STATUT_SELECT[$beneficiaire->statut] == 'Decés' )
+                                    <span class="text-danger"><b>{{ App\Models\Beneficiaire::STATUT_SELECT[$beneficiaire->statut] ?? '' }}</b></span>
+                                @else
+                                    <span class="text-warning"><b>{{ App\Models\Beneficiaire::STATUT_SELECT[$beneficiaire->statut] ?? '' }}</b></span>
+                                @endif
                             </td>
                             <td>
                                 {{ $beneficiaire->created_by->name ?? '' }}
@@ -83,18 +89,18 @@
                                 @endcan
 
                                 @can('beneficiaire_edit')
-                                    <a class="btn btn-xs btn-success" href="{{ route('admin.beneficiaires.edit', $beneficiaire->id) }}">
+                                    <a class="btn btn-xs btn-info" href="{{ route('admin.beneficiaires.edit', $beneficiaire->id) }}">
                                         <i class="fa fa-pencil"></i>
                                     </a>
                                 @endcan
 
-                                @can('beneficiaire_delete')
+                                {{-- @can('beneficiaire_delete')
                                     <form action="{{ route('admin.beneficiaires.destroy', $beneficiaire->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         <button type="submit" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
                                     </form>
-                                @endcan
+                                @endcan --}}
 
                             </td>
 
@@ -126,19 +132,42 @@
       });
 
       if (ids.length === 0) {
-        alert('{{ trans('global.datatables.zero_selected') }}')
-
+        let timerInterval
+        swal({
+            title: '{{ trans('global.datatables.zero_selected') }}',
+            timer: 3000,
+            icon: 'error',
+            timerProgressBar: true,
+            willClose: () => {
+                clearInterval(timerInterval)
+            }
+        })
         return
       }
 
-      if (confirm('{{ trans('global.areYouSure') }}')) {
-        $.ajax({
-          headers: {'x-csrf-token': _token},
-          method: 'POST',
-          url: config.url,
-          data: { ids: ids, _method: 'DELETE' }})
-          .done(function () { location.reload() })
-      }
+      swal({
+            title: '{{ trans('global.areYouSure') }}',
+            text: "Une fois supprimé, vous ne pourrez pas le récupérer !",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    headers: {'x-csrf-token': _token},
+                    method: 'POST',
+                    url: config.url,
+                    data: { ids: ids, _method: 'DELETE' }
+                })
+                .done(function () { 
+                    location.reload()
+                    swal("Enregistrement supprimé !", {
+                        icon: "success",
+                    })
+                });
+            }
+        });
     }
   }
   dtButtons.push(deleteButton)

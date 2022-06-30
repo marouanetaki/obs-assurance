@@ -3,9 +3,9 @@
 <div class="row justify-content-center">
     <div class="col-md-6">
         <div class="card mx-4">
-            <div class="card-body p-4">
+            <div class="card-body text-center">
                 <a href="/login" rel="home" class="main-logo">
-                    <img src="{{asset('front/images/logo/logo.png')}}" class="mb-3" alt="consalti">
+                    <img src="{{asset('front/images/obs.jpg')}}" class="mb-3" alt="consalti" width="70%" height="100%">
                 </a>
 
                 @if(session('message'))
@@ -55,19 +55,19 @@
                             </label>
                         </div>
                     </div>
-
-                    <div class="row">
-                        <div class="col-6">
-                            <button type="submit" class="btn btn-primary px-4">
-                                {{ trans('global.login') }}
-                            </button>
-                        </div>
-                        <div class="col-6 text-right">
+                    
+                    <button type="submit" class="btn btn-block btn-primary">
+                        {{ trans('global.login') }}
+                    </button>
+                    <div class="row mt-3">
+                        <div class="col-3">
                             @if(Route::has('password.request'))
                                 <a class="btn btn-link px-0" href="{{ route('password.request') }}">
                                     {{ trans('global.forgot_password') }}
                                 </a><br>
                             @endif
+                        </div>
+                        <div class="col-9 text-right">
                             <a class="btn btn-link px-0" href="{{ route('register') }}">
                                 {{ trans('global.register') }}
                             </a>

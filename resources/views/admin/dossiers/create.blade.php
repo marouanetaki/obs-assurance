@@ -11,7 +11,7 @@
             @csrf
             <div class="form-group">
                 <label class="required" for="num_dossier">{{ trans('cruds.dossier.fields.num_dossier') }}</label>
-                <input class="form-control {{ $errors->has('num_dossier') ? 'is-invalid' : '' }}" type="text" name="num_dossier" id="num_dossier" value="{{ old('num_dossier', '') }}" required>
+                <input class="form-control {{ $errors->has('num_dossier') ? 'is-invalid' : '' }}" type="text" name="num_dossier" id="num_dossier" value="{{ old('num_dossier', '') }}" disabled>
                 @if($errors->has('num_dossier'))
                     <div class="invalid-feedback">
                         {{ $errors->first('num_dossier') }}

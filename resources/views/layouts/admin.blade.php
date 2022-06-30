@@ -44,8 +44,11 @@
           
           <ul class="c-header-nav ml-auto">
               <li class="c-header-nav-item mt-2">
+                <h5 class="text-primary mr-2">{{ Auth::user()->name }}</h5>
+              </li>
+              <li class="c-header-nav-item">
                 @foreach(Auth::user()->roles as $key => $roles)
-                  <h5 class="badge badge-primary">{{ $roles->title }}</h5>
+                  <span class="badge badge-primary">{{ $roles->title }}</span>
                 @endforeach
               </li>
               @if(count(config('panel.available_languages', [])) > 1)
@@ -95,6 +98,7 @@
             </form>
         </div>
     </div>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>

@@ -19,7 +19,6 @@ class StoreDossierRequest extends FormRequest
         return [
             'num_dossier' => [
                 'string',
-                'required',
                 'unique:dossiers',
             ],
             'beneficiaire_id' => [

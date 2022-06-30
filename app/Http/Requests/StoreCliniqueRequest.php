@@ -22,7 +22,6 @@ class StoreCliniqueRequest extends FormRequest
                 'required',
             ],
             'email' => [
-                'required',
             ],
             'telephone' => [
                 'string',

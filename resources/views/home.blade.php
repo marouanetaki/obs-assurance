@@ -34,6 +34,8 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="row mt-3">
                         <div class="{{ $chart3->options['column_class'] }} text-center mt-4">
                             <h5 class="mb-3">{!! $chart3->options['chart_title'] !!}</h5>
                             {!! $chart3->renderHtml() !!}
@@ -46,11 +48,13 @@
                             <h5 class="mb-3">{!! $chart5->options['chart_title'] !!}</h5>
                             {!! $chart5->renderHtml() !!}
                         </div>
+                    </div>
+                    {{-- <div class="row">
                         <div class="{{ $chart6->options['column_class'] }} text-center mt-4">
                             <h5>{!! $chart6->options['chart_title'] !!}</h5>
                             {!! $chart6->renderHtml() !!}
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>

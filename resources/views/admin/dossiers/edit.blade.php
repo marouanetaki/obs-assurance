@@ -10,16 +10,18 @@
         <form method="POST" action="{{ route("admin.dossiers.update", [$dossier->id]) }}" enctype="multipart/form-data">
             @method('PUT')
             @csrf
-            <div class="form-group">
-                <label class="required" for="num_dossier">{{ trans('cruds.dossier.fields.num_dossier') }}</label>
-                <input class="form-control {{ $errors->has('num_dossier') ? 'is-invalid' : '' }}" type="text" name="num_dossier" id="num_dossier" value="{{ old('num_dossier', $dossier->num_dossier) }}" required>
-                @if($errors->has('num_dossier'))
-                    <div class="invalid-feedback">
-                        {{ $errors->first('num_dossier') }}
-                    </div>
-                @endif
-                <span class="help-block">{{ trans('cruds.dossier.fields.num_dossier_helper') }}</span>
-            </div>
+            @can('can_edit')
+                <div class="form-group">
+                    <label class="required" for="num_dossier">{{ trans('cruds.dossier.fields.num_dossier') }}</label>
+                    <input class="form-control {{ $errors->has('num_dossier') ? 'is-invalid' : '' }}" type="text" name="num_dossier" id="num_dossier" value="{{ old('num_dossier', $dossier->num_dossier) }}">
+                    @if($errors->has('num_dossier'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('num_dossier') }}
+                        </div>
+                    @endif
+                    <span class="help-block">{{ trans('cruds.dossier.fields.num_dossier_helper') }}</span>
+                </div>
+            @endcan
             <div class="form-group">
                 <label class="required" for="beneficiaire_id">{{ trans('cruds.dossier.fields.beneficiaire') }}</label>
                 <select class="form-control select2 {{ $errors->has('beneficiaire') ? 'is-invalid' : '' }}" name="beneficiaire_id" id="beneficiaire_id" required>

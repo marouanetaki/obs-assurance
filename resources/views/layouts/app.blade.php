@@ -7,8 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Favicon and Touch Icons  -->
-    <link rel="shortcut icon" href="{{asset('front/icon/Favicon.png')}}">
-    <link rel="apple-touch-icon-precomposed" href="{{asset('front/icon/Favicon.png')}}">
+    <link rel="shortcut icon" type="image/x-icon" href="https://plazza.orange.com//themes/orange-global/favicon.ico">
     <title>{{ trans('panel.site_title') }}</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://unpkg.com/@coreui/coreui@3.2/dist/css/coreui.min.css" rel="stylesheet" />

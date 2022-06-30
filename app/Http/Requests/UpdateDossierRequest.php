@@ -19,7 +19,6 @@ class UpdateDossierRequest extends FormRequest
         return [
             'num_dossier' => [
                 'string',
-                'required',
                 'unique:dossiers,num_dossier,' . request()->route('dossier')->id,
             ],
             'beneficiaire_id' => [

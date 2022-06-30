@@ -83,18 +83,18 @@
                                 @endcan
 
                                 @can('dossier_edit')
-                                    <a class="btn btn-xs btn-success" href="{{ route('admin.dossiers.edit', $dossier->id) }}">
+                                    <a class="btn btn-xs btn-info" href="{{ route('admin.dossiers.edit', $dossier->id) }}">
                                         <i class="fa fa-pencil"></i>
                                     </a>
                                 @endcan
 
-                                @can('dossier_delete')
+                                {{-- @can('dossier_delete')
                                     <form action="{{ route('admin.dossiers.destroy', $dossier->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         <button type="submit" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
                                     </form>
-                                @endcan
+                                @endcan --}}
                             </td>
                         </tr>
                     @endforeach
@@ -124,19 +124,42 @@
       });
 
       if (ids.length === 0) {
-        alert('{{ trans('global.datatables.zero_selected') }}')
-
+        let timerInterval
+        swal({
+            title: '{{ trans('global.datatables.zero_selected') }}',
+            timer: 3000,
+            icon: 'error',
+            timerProgressBar: true,
+            willClose: () => {
+                clearInterval(timerInterval)
+            }
+        })
         return
       }
 
-      if (confirm('{{ trans('global.areYouSure') }}')) {
-        $.ajax({
-          headers: {'x-csrf-token': _token},
-          method: 'POST',
-          url: config.url,
-          data: { ids: ids, _method: 'DELETE' }})
-          .done(function () { location.reload() })
-      }
+      swal({
+            title: '{{ trans('global.areYouSure') }}',
+            text: "Une fois supprimé, vous ne pourrez pas le récupérer !",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    headers: {'x-csrf-token': _token},
+                    method: 'POST',
+                    url: config.url,
+                    data: { ids: ids, _method: 'DELETE' }
+                })
+                .done(function () { 
+                    location.reload()
+                    swal("Enregistrement supprimé !", {
+                        icon: "success",
+                    })
+                });
+            }
+        });
     }
   }
   dtButtons.push(deleteButton)
