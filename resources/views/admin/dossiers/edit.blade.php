@@ -10,7 +10,7 @@
         <form method="POST" action="{{ route("admin.dossiers.update", [$dossier->id]) }}" enctype="multipart/form-data">
             @method('PUT')
             @csrf
-            @can('can_edit')
+            @can('edit_statut')
                 <div class="form-group">
                     <label class="required" for="num_dossier">{{ trans('cruds.dossier.fields.num_dossier') }}</label>
                     <input class="form-control {{ $errors->has('num_dossier') ? 'is-invalid' : '' }}" type="text" name="num_dossier" id="num_dossier" value="{{ old('num_dossier', $dossier->num_dossier) }}">

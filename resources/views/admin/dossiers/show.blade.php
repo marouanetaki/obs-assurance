@@ -104,7 +104,7 @@
                         <td>
                             @foreach($dossier->documents as $key => $media)
                                 <a href="{{ $media->getUrl() }}" target="_blank" style="display: inline-block">
-                                    <img src="{{ $media->getUrl('thumb') }}">
+                                    <img src="{{ $media->getUrl('thumb') }}" width="100" height="100">
                                 </a>
                             @endforeach
                         </td>

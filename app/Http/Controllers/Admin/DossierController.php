@@ -10,6 +10,7 @@ use App\Http\Requests\UpdateDossierRequest;
 use App\Models\Beneficiaire;
 use App\Models\Dossier;
 use App\Models\Medicament;
+use App\Models\Facture;
 use Gate;
 use Illuminate\Http\Request;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -41,17 +42,26 @@ class DossierController extends Controller
 
     public function store(StoreDossierRequest $request)
     {
-        $dossier = Dossier::create($request->all());
-        $dossier->medicaments()->sync($request->input('medicaments', []));
-        foreach ($request->input('documents', []) as $file) {
-            $dossier->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('documents');
-        }
+        $bn = Beneficiaire::where('id', '=', $request->beneficiaire_id)->first();
+        if($bn->statut == 'Inactif'){
+            echo"
+            <script>
+                alert('Le bénéficiare devrait etre validé par le responsable, dossier non ajouté')
+            </script>";
+        }else{
+            $dossier = Dossier::create($request->all());
+            $dossier->medicaments()->sync($request->input('medicaments', []));
+            foreach ($request->input('documents', []) as $file) {
+                $dossier->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('documents');
+            }
 
-        if ($media = $request->input('ck-media', false)) {
-            Media::whereIn('id', $media)->update(['model_id' => $dossier->id]);
-        }
+            if ($media = $request->input('ck-media', false)) {
+                Media::whereIn('id', $media)->update(['model_id' => $dossier->id]);
+            }
 
-        return redirect()->route('admin.dossiers.index');
+            return redirect()->route('admin.dossiers.index');
+        }
+        
     }
 
     public function edit(Dossier $dossier)
@@ -65,6 +75,10 @@ class DossierController extends Controller
         $dossier->load('beneficiaire', 'medicaments', 'created_by');
 
         return view('admin.dossiers.edit', compact('beneficiaires', 'dossier', 'medicaments'));
+    }
+
+    public function calcule($consult, $pharma, $analyse){
+        return ($consult*0.7)+($pharma*0.7)+($analyse*0.8);
     }
 
     public function update(UpdateDossierRequest $request, Dossier $dossier)
@@ -83,6 +97,19 @@ class DossierController extends Controller
             if (count($media) === 0 || !in_array($file, $media)) {
                 $dossier->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('documents');
             }
+        }
+        if ($request->statut == 'Remboursé') {
+            $facture = new Facture();
+            $facture->mode_paiement = 'Virement';
+            $facture->dossier_id = $dossier->id;
+            $facture->created_by_id = $dossier->created_by_id;
+            $facture->frais_rembourse = $this->calcule(
+                    $dossier->frais_consultation,
+                    $dossier->frais_pharmacie,
+                    $dossier->frais_analyse,
+            );
+            // dd($facture);
+            $facture->save();
         }
 
         return redirect()->route('admin.dossiers.index');

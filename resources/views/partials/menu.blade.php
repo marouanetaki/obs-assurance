@@ -166,9 +166,9 @@
                     <i class="c-sidebar-nav-icon fa-fw fa fa-envelope">
 
                     </i>
-                    <span>{{ trans('global.messages') }}</span>
+                    <span class="mr-2">{{ trans('global.messages') }}</span>
                     @if($unread > 0)
-                        <strong>( {{ $unread }} )</strong>
+                        <strong class="badge badge-light">{{ $unread }}</strong>
                     @endif
 
                 </a>

@@ -59,7 +59,7 @@
                             </td>
                             <td>
                                 @if($facture->dossier)
-                                    {{ $facture->dossier::STATUT_SELECT[$facture->dossier->statut] ?? '' }}
+                                    <span class="text-success"><b>{{ $facture->dossier::STATUT_SELECT[$facture->dossier->statut] }}</b></span>
                                 @endif
                             </td>
                             <td>
@@ -69,7 +69,7 @@
                                 {{ $facture->created_by->name ?? '' }}
                             </td>
                             <td>
-                                {{ App\Models\Facture::MODE_PAIEMENT_SELECT[$facture->mode_paiement] ?? '' }}
+                                <span class="text-success"><b>{{ App\Models\Facture::MODE_PAIEMENT_SELECT[$facture->mode_paiement] ?? '' }}</b></span> 
                             </td>
                             <td>
                                 @can('facture_show')

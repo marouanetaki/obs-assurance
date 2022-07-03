@@ -67,7 +67,15 @@
                                 {{ $dossier->date_soins ?? '' }}
                             </td>
                             <td>
-                                {{ App\Models\Dossier::STATUT_SELECT[$dossier->statut] ?? '' }}
+                                @if ( App\Models\Dossier::STATUT_SELECT[$dossier->statut] == 'Remboursé' )
+                                    <span class="text-success"><b>{{ App\Models\Dossier::STATUT_SELECT[$dossier->statut] ?? '' }}</b></span>
+                                @elseif ( App\Models\Dossier::STATUT_SELECT[$dossier->statut] == 'Enregistré' )
+                                    <span class="text-warning"><b>{{ App\Models\Dossier::STATUT_SELECT[$dossier->statut] ?? '' }}</b></span>
+                                @elseif ( App\Models\Dossier::STATUT_SELECT[$dossier->statut] == 'En cours de traitement' )
+                                    <span class="text-info"><b>{{ App\Models\Dossier::STATUT_SELECT[$dossier->statut] ?? '' }}</b></span>
+                                @else
+                                    <span class="text-danger"><b>{{ App\Models\Dossier::STATUT_SELECT[$dossier->statut] ?? '' }}</b></span>
+                                @endif
                             </td>
                             <td>
                                 {{ $dossier->created_by->name ?? '' }}

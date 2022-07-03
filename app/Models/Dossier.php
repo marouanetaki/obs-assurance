@@ -20,7 +20,7 @@ class Dossier extends Model implements HasMedia
     use HasFactory;
 
     public const STATUT_SELECT = [
-        'Enregisté' => 'Enregisté',
+        'Enregistré' => 'Enregistré',
         'En cours'  => 'En cours de traitement',
         'Remboursé' => 'Remboursé',
         'Rejeté'    => 'Rejeté',
